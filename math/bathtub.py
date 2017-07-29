@@ -10,7 +10,7 @@ diameter_drain = 2     *  u.inch
 bathtub_length = 60    *  u.inch
 bathtub_width  = 30    *  u.inch
 max_height     = 14.25 *  u.inch
-faucet_flow    = 0     * (u.gallon/u.minute)
+faucet_flow    = 1     * (u.gallon/u.minute)
 dt             = 0.01  *  u.second
 #=============================================#
 area_drain = np.pi * (diameter_drain/2)**2
@@ -35,7 +35,10 @@ difference = 1 * u.inch
 while difference.magnitude > 1e-10:
     old_height = water_height
     dh_faucet = (faucet_flow/(bathtub_length*bathtub_width))*dt
-    dh_tub = -(area_drain/(bathtub_length*bathtub_width)*np.sqrt(2*g*water_height))*dt
+    if water_height.magnitude > 0:
+        dh_tub = -(area_drain/(bathtub_length*bathtub_width)*np.sqrt(2*g*water_height))*dt
+    else:
+        dh_tub = 0 * u.meter
     water_height += dh_tub + dh_faucet
     difference = old_height - water_height
     time += dt
