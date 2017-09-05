@@ -17,17 +17,17 @@ area_drain = np.pi * (diameter_drain/2)**2
 water_height = (bathtub_vol/(bathtub_length*bathtub_width)).to(u.meter)
 
 if water_height > max_height:
-    print ' '
-    print '    ERR: Too much water to fit in tub'
-    print ' '
+    print (' ')
+    print ('    ERR: Too much water to fit in tub')
+    print (' ')
     exit()
 
 flow_rate = (area_drain * np.sqrt(2 * g * water_height)).to(u.US_liquid_gallon/u.hour)
 
-print ' '
-print '=============Begin Program=============='
-print 'flow rate:',flow_rate
-print '========================================'
+print (' ')
+print ('=============Begin Program==============')
+print ('flow rate:',flow_rate)
+print ('========================================')
 
 time = 0 * u.second
 difference = 1 * u.inch
@@ -43,5 +43,5 @@ while difference.magnitude > 1e-10:
     difference = old_height - water_height
     time += dt
 
-print 'time to empty:',time.to(u.minute)
+print ('time to empty:',time.to(u.minute))
 #print '========================================'

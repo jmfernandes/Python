@@ -1,6 +1,6 @@
-from Tkinter import *
+from tkinter import *
 
-import Tkconstants, tkFileDialog, tkMessageBox
+import tkinter.constants, tkinter.filedialog, tkinter.messagebox
 
 from textwrap import wrap
 
@@ -9,7 +9,7 @@ def wrapAndPrint (msg, width=25):
 
     message = wrap(msg, width)
     for line in message:
-        print line
+        print (line)
 
 msg = ("1. Decide if this message is to be encrypted or decrypted.\n2. Open a txt file with the message you want to alter. The text should appear in the 'Original Text' box. \n3. Enter a keyword and click the 'code' button\n4. If encypting, the encrypted message will appear in the box on the right. If decrypting, the original message should appear in the box on the right. \n5. If you want, you can save the output of the box on the right with the 'Save As' button")
 
@@ -36,7 +36,7 @@ class App(Frame):
         helpframe.pack(side=BOTTOM)
 
         #make directory button
-        button_opt = {'fill': Tkconstants.BOTH, 'padx': 5, 'pady': 5}
+        button_opt = {'fill': tkinter.constants.BOTH, 'padx': 5, 'pady': 5}
         Button(self, text='open file', command=self.askopenfile).pack(**button_opt)
         buttonlabel = Label(self, text = "enter keyword")
         buttonlabel.pack()
@@ -107,7 +107,7 @@ class App(Frame):
         Button(helpframe, text='help', command=self.helpinfo).pack(**button_opt)
 
     def askopenfile(self):
-        file = tkFileDialog.askopenfile(mode='r', **self.file_opt)
+        file = tkinter.filedialog.askopenfile(mode='r', **self.file_opt)
         if file == None and not words:
             txt = ''
         elif file == None and words:
@@ -126,9 +126,9 @@ class App(Frame):
 
     def asksaveasfile(self):
         if not finishedcode:
-            tkMessageBox.showerror(title="error",message="Code a message to save the result")
+            tkinter.messagebox.showerror(title="error",message="Code a message to save the result")
         else:
-            save = tkFileDialog.asksaveasfile(mode='w', **self.file_opt)
+            save = tkinter.filedialog.asksaveasfile(mode='w', **self.file_opt)
             if not save:
                 pass
             else:
@@ -138,19 +138,19 @@ class App(Frame):
                 return save
 
     def helpinfo(self):
-        tkMessageBox.showinfo(title="help",message=msg)
+        tkinter.messagebox.showinfo(title="help",message=msg)
 
     def code(self):
         items = list((self.text.get(1.0, END)).replace(" ", "").rstrip())
         data = list((self.text.get(1.0, END)))
 
         if not items:
-            tkMessageBox.showerror(title="error",message="Open a file first or type into the box on the left")
+            tkinter.messagebox.showerror(title="error",message="Open a file first or type into the box on the left")
         else:
             self.text2.delete(1.0, END)
             self.keyword = self.entryfield.get()
             if not self.keyword:
-                tkMessageBox.showerror(title="error",message="Enter a keyword")
+                tkinter.messagebox.showerror(title="error",message="Enter a keyword")
             else:
                 counting = 0
                 reset = 0
@@ -164,7 +164,7 @@ class App(Frame):
                         if self.keyword[counting] in letters or self.keyword[counting] in capital:
                             pass
                         else:
-                            print "\n ERROR: not a valid codeword. No letters or special characters allowed. \n"
+                            print ("\n ERROR: not a valid codeword. No letters or special characters allowed. \n")
                             exit()
                         if data[i] in letters or data[i] in capital:
                             if self.keyword[counting] in letters:
@@ -204,7 +204,7 @@ class App(Frame):
                         if self.keyword[counting] in letters or self.keyword[counting] in capital:
                             pass
                         else:
-                            print "\n ERROR: not a valid codeword. No letters or special characters allowed. \n"
+                            print ("\n ERROR: not a valid codeword. No letters or special characters allowed. \n")
                             exit()
                         if data[i] in letters or data[i] in capital:
                             if self.keyword[counting] in letters:
