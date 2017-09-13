@@ -31,3 +31,11 @@ for passport in sorted(traveler_ids):
 #unpacking
 for country, _ in traveler_ids:
     print(country)
+
+a,b,*rest,c = range(6)
+print (a)
+print (b)
+print (*rest)
+print (c)
+
+print('{:15} | {:<19} | {:3^9} | {:>20} | '.format('','lat','long','extra'))
