@@ -13,6 +13,8 @@
 #
 #
 ########################################
+from collections import namedtuple
+
 colors = ['black','white']
 sizes = ['S','M','L']
 tshirts = [(color,size) for color in colors for size in sizes]
@@ -39,3 +41,12 @@ print (*rest)
 print (c)
 
 print('{:15} | {:<19} | {:3^9} | {:>20} | '.format('','lat','long','extra'))
+
+#named tuple
+City = namedtuple('City','name country population coordinates')
+tokyo = City('Tokyo', 'JP', 36.933, (35.689722,139.691667))
+print(tokyo.coordinates)
+LatLong = namedtuple('LatLong', 'lat long')
+delhi_data = ('Delhi NCR', 'IN', 21.935, LatLong(28.613889,77.208889))
+delhi = City(*delhi_data) #City(delhi_data) passes it all as name arugment
+print('the population is %s' % (delhi.population))
