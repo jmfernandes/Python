@@ -50,11 +50,7 @@ class Hex:
         angle_deg = 60*i
         return Point(center[0]+size*math.cos(math.radians(angle_deg)),
                      center[1]+size*math.sin(math.radians(angle_deg)))
-size=1
-for i in range(-size,size+1):
-    for j in range(-size,size+1):
-        if (abs(i+j) <= size):
-            print(i,j)
+
 
 class window(QDialog):
 
@@ -66,7 +62,9 @@ class window(QDialog):
 
     def initUI(self):
 
-        self.windowSize = 500
+        self.radius = 1
+        self.polygonsize = 50
+        self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3)
         self.resize(self.windowSize,self.windowSize)
         self.center
         self.setWindowTitle("PyQt - Hex Board")
@@ -75,14 +73,6 @@ class window(QDialog):
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                            # set lineWidth
         self.brush = QBrush(QColor(255,255,255,255))        # set fillColor
-        self.radius = 2
-        # self.polygon = self.createPoly(Hex(0,0))                         # polygon with n points, radius, angle of the first point
-        # self.polygon2 = self.createPoly(Hex(1,0))
-        # self.polygon3 = self.createPoly(Hex(0,1))
-        # self.polygon4 = self.createPoly(Hex(-1,0))
-        # self.polygon5 = self.createPoly(Hex(0,-1))
-        # self.polygon6 = self.createPoly(Hex(-1,1))
-        # self.polygon7 = self.createPoly(Hex(1,-1))
 
     def initShow(self):
         self.show()
@@ -109,14 +99,9 @@ class window(QDialog):
         for i in range(-self.radius,self.radius+1):
             for j in range(-self.radius,self.radius+1):
                 if (abs(i+j) <= self.radius):
-                    polygon = self.createPoly(Hex(i,j))
+                    polygon = self.createPoly(Hex(i,j,self.polygonsize))
                     painter.drawPolygon(polygon)
-        # painter.drawPolygon(self.polygon2)
-        # painter.drawPolygon(self.polygon3)
-        # painter.drawPolygon(self.polygon4)
-        # painter.drawPolygon(self.polygon5)
-        # painter.drawPolygon(self.polygon6)
-        # painter.drawPolygon(self.polygon7)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
