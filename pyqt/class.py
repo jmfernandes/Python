@@ -35,10 +35,10 @@ class window(QDialog):
         self.show()
 
     def b1_clicked(self):
-        print "Button 1 clicked"
+        print ("Button 1 clicked")
 
     def b2_clicked(self):
-        print "Button 2 clicked"
+        print ("Button 2 clicked")
 
     def center(self):
 
