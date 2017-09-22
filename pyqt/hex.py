@@ -27,6 +27,10 @@ r = lambda: random.randint(0,255)
 s = lambda: '#%02X%02X%02X' % (r(),r(),r())
 # s() #creates a random hex code for colors
 
+def pixel_to_hex(x,y,size):
+    q = round(-x * 2/3 / size)
+    r = round((-x / 3 + math.sqrt(3)/3 * y) / size)
+    return Hex(q,r,size)
 
 class Hex:
 
@@ -58,6 +62,7 @@ class Hex:
                      center[1]+size*math.sin(math.radians(angle_deg)))
 
 
+
 class window(QDialog):
 
     def __init__(self):
@@ -68,7 +73,7 @@ class window(QDialog):
 
     def initUI(self):
 
-        self.radius = 5
+        self.radius = 2
         self.polygonsize = 50
         self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3)
         self.resize(self.windowSize,self.windowSize)
@@ -98,16 +103,23 @@ class window(QDialog):
 
         return polygon
 
+    def mousePressEvent(self,QMouseEvent):
+        pos = QMouseEvent.pos()
+        x = self.windowSize/2 - QMouseEvent.x()
+        y = self.windowSize/2 - QMouseEvent.y()
+        print(QMouseEvent.pos())
+        print(x,y)
+        print(pixel_to_hex(x,y,50))
+        self.update()
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(self.pen)
         # painter.setBrush(self.brush)
-        iter=0
         for i in range(-self.radius,self.radius+1):
             for j in range(-self.radius,self.radius+1):
                 if (abs(i+j) <= self.radius):
-                    self.brush = QBrush(QColor(s()))
-                    iter+=1
+                    self.brush = QBrush(QColor(255,255,255,255))
                     painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(i,j,self.polygonsize))
                     painter.drawPolygon(polygon)
