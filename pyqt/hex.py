@@ -2,7 +2,7 @@
 #
 # hex.py
 #
-# Description:
+# Description: creates a hexagonal grid
 #
 #
 # Author: Josh Fernandes
@@ -16,12 +16,17 @@
 import sys
 import collections
 import math
-from PyQt5.QtCore import QObject, QPointF
-from PyQt5.QtGui import QFont, QPen, QColor, QBrush, QPolygonF, QPainter
+import random
+from PyQt5.QtCore    import QObject, QPointF
+from PyQt5.QtGui     import QFont, QPen, QColor, QBrush, QPolygonF, QPainter
 from PyQt5.QtWidgets import QApplication, QToolTip, QWidget, QLabel,\
                             QPushButton, QDialog,QDesktopWidget
 
 Point = collections.namedtuple('Point', 'x y')
+r = lambda: random.randint(0,255)
+s = lambda: '#%02X%02X%02X' % (r(),r(),r())
+# s() #creates a random hex code for colors
+
 
 class Hex:
 
@@ -31,7 +36,8 @@ class Hex:
         self.size   = size
         self.width  = self.size*2*3/4
         self.height = math.sqrt(3)/4*self.size*2
-        self.center = Point(self.q*self.width,self.q*self.height+(self.r*self.height*2))
+        self.center = Point(self.q*self.width,
+                            self.q*self.height+(self.r*self.height*2))
 
     def __repr__(self):
         return 'Hex(%r,%r,%r,%r)' % (self.q,self.r,self.size,self.center)
@@ -62,7 +68,7 @@ class window(QDialog):
 
     def initUI(self):
 
-        self.radius = 1
+        self.radius = 5
         self.polygonsize = 50
         self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3)
         self.resize(self.windowSize,self.windowSize)
@@ -71,8 +77,8 @@ class window(QDialog):
 
     def initBoard(self):
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
-        self.pen.setWidth(3)                                            # set lineWidth
-        self.brush = QBrush(QColor(255,255,255,255))        # set fillColor
+        self.pen.setWidth(3)                                # set lineWidth
+        # self.brush = QBrush(QColor(255,255,255,255))        # set fillColor
 
     def initShow(self):
         self.show()
@@ -95,10 +101,14 @@ class window(QDialog):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(self.pen)
-        painter.setBrush(self.brush)
+        # painter.setBrush(self.brush)
+        iter=0
         for i in range(-self.radius,self.radius+1):
             for j in range(-self.radius,self.radius+1):
                 if (abs(i+j) <= self.radius):
+                    self.brush = QBrush(QColor(s()))
+                    iter+=1
+                    painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(i,j,self.polygonsize))
                     painter.drawPolygon(polygon)
 
