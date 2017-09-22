@@ -38,17 +38,16 @@ def hex_to_pixel(hex):
     y = hex.size*(hex.r+hex.q/2)
     return Point(x,y)
 
-def distance(a):
-    if (a.q == a.r):
-        return abs(a.q+a.r)
-    else:
-        return (abs(a.q) + abs(a.r))
-
 def axial_to_cube(hex):
     x = hex.q
     z = hex.r
     y = -x-z
     return Cube(x, y, z)
+
+def cube_to_axial(cube):
+    q = cube.x
+    r = cube.z
+    return Hex(q, r)
 
 def cube_distance(a, b):
     return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
@@ -57,6 +56,43 @@ def hex_distance(a, b):
     ac = axial_to_cube(a)
     bc = axial_to_cube(b)
     return cube_distance(ac, bc)
+
+def cube_round(cube):
+    rx = round(cube.x)
+    ry = round(cube.y)
+    rz = round(cube.z)
+
+    x_diff = abs(rx - cube.x)
+    y_diff = abs(ry - cube.y)
+    z_diff = abs(rz - cube.z)
+
+    if x_diff > y_diff and x_diff > z_diff:
+        rx = -ry-rz
+    elif y_diff > z_diff:
+        ry = -rx-rz
+    else:
+        rz = -rx-ry
+
+    return Cube(rx, ry, rz)
+
+def lerp(a, b, t):
+    return a + (b - a) * t
+
+def cube_lerp(a, b, t):
+    return Cube(lerp(a.x, b.x, t),
+                lerp(a.y, b.y, t),
+                lerp(a.z, b.z, t))
+
+def cube_linedraw(a, b): # pass in hex
+    a = axial_to_cube(a)
+    b = axial_to_cube(b)
+    N = round(cube_distance(a, b))
+    results = []
+    for i in range(0,N+1):
+        c = cube_round(cube_lerp(a, b, 1.0/N * i))
+        h = cube_to_axial(c)
+        results.append((h.q,h.r))
+    return results
 
 class Hex:
 
@@ -87,6 +123,8 @@ class Hex:
         return Point(center.x+size*math.cos(math.radians(angle_deg)),
                      center.y+size*math.sin(math.radians(angle_deg)))
 
+print(cube_linedraw(Hex(-3,3),Hex(3,-2)))
+
 class window(QDialog):
 
     def __init__(self):
@@ -95,16 +133,16 @@ class window(QDialog):
 
     def initUI(self):
 
-        self.iteration = 0
-        self.mouse = Point(0,0)
-        self.redcoords = Point(0,0)
-        self.bluecoords = Point(0,0)
-        self.radius = 2
+        self.iteration   = 0
+        self.mouse       = Point(0,0)
+        self.redcoords   = Point(0,0)
+        self.bluecoords  = Point(0,0)
+        self.radius      = 3
         self.polygonsize = 50
-        self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3.5)
+        self.windowSize  = Hex(0,0,self.polygonsize).width*(2*self.radius+3.5)
         self.resize(self.windowSize,self.windowSize)
-        self.center
         self.setWindowTitle("PyQt - Hex Board")
+        self.center
         self.show()
 
     def center(self):
@@ -123,26 +161,28 @@ class window(QDialog):
         return polygon
 
     def reset(self):
-        self.redcoords = Point(0,0)
+        self.redcoords  = Point(0,0)
         self.bluecoords = Point(0,0)
-        self.iteration=1
+        self.iteration  = 1
 
     def mousePressEvent(self,QMouseEvent):
         pos = QMouseEvent.pos()
-        x = self.windowSize/2 - QMouseEvent.x()
-        y = self.windowSize/2 - QMouseEvent.y()
-        self.mouse = Point(pixel_to_hex(x,y,self.polygonsize).q,pixel_to_hex(x,y,self.polygonsize).r)
+        x   = self.windowSize/2 - QMouseEvent.x()
+        y   = self.windowSize/2 - QMouseEvent.y()
+        self.mouse = Point(pixel_to_hex(x,y,self.polygonsize).q,
+                           pixel_to_hex(x,y,self.polygonsize).r)
         self.iteration+=1
         if self.iteration>3: #reset the board
             self.reset()
+
         self.update()
 
     def paintEvent(self, event):
-        painter = QPainter(self)
+        distance = hex_distance(Hex(self.mouse.x,self.mouse.y),Hex(0,0))
+        painter  = QPainter(self)
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                # set lineWidth
         painter.setPen(self.pen)
-        distance = hex_distance(Hex(self.mouse.x,self.mouse.y),Hex(0,0))
         if self.iteration == 0:
             for i in range(-self.radius,self.radius+1):
                 for j in range(-self.radius,self.radius+1):
