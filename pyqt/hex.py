@@ -141,7 +141,6 @@ class window(QDialog):
         x = self.windowSize/2 - QMouseEvent.x()
         y = self.windowSize/2 - QMouseEvent.y()
         self.mouse = Point(pixel_to_hex(x,y,50).q,pixel_to_hex(x,y,50).r)
-        # print(self.mouse)
         self.iteration+=1
         if self.iteration>3: #reset the board
             self.reset()
@@ -162,7 +161,6 @@ class window(QDialog):
                         polygon = self.createPoly(Hex(i,j,self.polygonsize))
                         painter.drawPolygon(polygon)
         elif self.iteration == 1:
-            print(distance)
             if distance > self.radius: #not valid hex chosen
                 for i in range(-self.radius,self.radius+1):
                     for j in range(-self.radius,self.radius+1):
@@ -191,7 +189,6 @@ class window(QDialog):
                                 polygon = self.createPoly(Hex(i,j,self.polygonsize))
                                 painter.drawPolygon(polygon)
         elif self.iteration == 2:
-            print(distance)
             if distance > self.radius: #not valid hex chosen
                 for i in range(-self.radius,self.radius+1):
                     for j in range(-self.radius,self.radius+1):
