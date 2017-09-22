@@ -92,8 +92,6 @@ class window(QDialog):
     def __init__(self):
         super(window,self).__init__()
         self.initUI()
-        # self.initBoard()
-        self.initShow()
 
     def initUI(self):
 
@@ -103,17 +101,10 @@ class window(QDialog):
         self.bluecoords = Point(0,0)
         self.radius = 2
         self.polygonsize = 50
-        self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3)
+        self.windowSize = Hex(0,0,self.polygonsize).width*(2*self.radius+3.5)
         self.resize(self.windowSize,self.windowSize)
         self.center
         self.setWindowTitle("PyQt - Hex Board")
-
-    # def initBoard(self):
-    #     self.pen = QPen(QColor(0,0,0))                      # set lineColor
-    #     self.pen.setWidth(3)                                # set lineWidth
-        # self.brush = QBrush(QColor(255,255,255,255))        # set fillColor
-
-    def initShow(self):
         self.show()
 
     def center(self):
@@ -140,7 +131,7 @@ class window(QDialog):
         pos = QMouseEvent.pos()
         x = self.windowSize/2 - QMouseEvent.x()
         y = self.windowSize/2 - QMouseEvent.y()
-        self.mouse = Point(pixel_to_hex(x,y,50).q,pixel_to_hex(x,y,50).r)
+        self.mouse = Point(pixel_to_hex(x,y,self.polygonsize).q,pixel_to_hex(x,y,self.polygonsize).r)
         self.iteration+=1
         if self.iteration>3: #reset the board
             self.reset()
