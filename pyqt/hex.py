@@ -118,10 +118,16 @@ class Hex:
         r = self.r - other.r
         return Hex(q,r,self.size)
 
-    def hex_corner(self,center,size,i):
+    def hex_corner(self,i):
         angle_deg = 60*i
-        return Point(center.x+size*math.cos(math.radians(angle_deg)),
-                     center.y+size*math.sin(math.radians(angle_deg)))
+        return Point(self.center.x+self.size*math.cos(math.radians(angle_deg)),
+                     self.center.y+self.size*math.sin(math.radians(angle_deg)))
+
+    def distance_from_center(self):
+        x = self.q
+        z = self.r
+        y = -x-z
+        return (abs(x) + abs(y) + abs(z)) / 2
 
 print(cube_linedraw(Hex(-3,3),Hex(3,-2)))
 
@@ -154,7 +160,7 @@ class window(QDialog):
     def createPoly(self,item):
         polygon = QPolygonF()
         for i in range(6): # add the points of polygon
-            coords = item.hex_corner(item.center,item.size,i)
+            coords = item.hex_corner(i)
             polygon.append(QPointF(self.windowSize/2+coords.x,
                                    self.windowSize/2-2*item.center.y+coords.y))
 
@@ -178,7 +184,7 @@ class window(QDialog):
         self.update()
 
     def paintEvent(self, event):
-        distance = hex_distance(Hex(self.mouse.x,self.mouse.y),Hex(0,0))
+        distance = Hex(self.mouse.x,self.mouse.y).distance_from_center()
         painter  = QPainter(self)
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                # set lineWidth
