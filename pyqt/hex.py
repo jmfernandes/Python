@@ -184,14 +184,18 @@ class window(QDialog):
         y   = self.windowSize/2 - QMouseEvent.y()
         self.mouse = Point(pixel_to_hex(x,y,self.polygonsize).q,
                            pixel_to_hex(x,y,self.polygonsize).r)
-        self.iteration+=1
+
+        distance = Hex(self.mouse.x,self.mouse.y).distance_from_center()
+        if distance > self.radius: # dont update if outside click
+            pass
+        else:
+            self.update()
+            self.iteration+=1
+
         if self.iteration>3: #reset the board
             self.reset()
 
-        self.update()
-
     def paintEvent(self, event):
-        distance = Hex(self.mouse.x,self.mouse.y).distance_from_center()
         painter  = QPainter(self)
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                # set lineWidth
@@ -203,116 +207,68 @@ class window(QDialog):
                 polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
                 painter.drawPolygon(polygon)
         elif self.iteration == 1:
-            if distance > self.radius: #not valid hex chosen
-                for item in self.index:
+            for item in self.index:
+                if (item.x == self.mouse.x and item.y == self.mouse.y):
+                    #draw red hex
+                    self.redcoords = Point(item.x,item.y)
+                    self.brush = QBrush(QColor(255,0,0,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
+                else:
                     #draw remainder of white hexes
                     self.brush = QBrush(QColor(255,255,255,255))
                     painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
                     painter.drawPolygon(polygon)
-                    self.iteration = 0 #reset to redraw red hex
-            else: #valid hex choses
-                for item in self.index:
-                    if (item.x == self.mouse.x and item.y == self.mouse.y):
-                        #draw red hex
-                        self.redcoords = Point(item.x,item.y)
-                        self.brush = QBrush(QColor(255,0,0,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    else:
-                        #draw remainder of white hexes
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
         elif self.iteration == 2:
-            if distance > self.radius: #not valid hex chosen
-                for item in self.index:
-                    if (item.x == self.redcoords.x and item.y == self.redcoords.y):
-                        #redraws the old red hex
-                        self.brush = QBrush(QColor(255,0,0,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    else:
-                        #draw the remainder white hex
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    self.iteration = 1
-            else:
-                for item in self.index:
-                    if (self.mouse.x == self.redcoords.x and self.mouse.y == self.redcoords.y ):
-                        #undo red hex
-                        self.iteration=0
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    elif (item.x == self.mouse.x and item.y == self.mouse.y):
-                        #draws blue hex
-                        self.bluecoords = Point(item.x,item.y)
-                        self.brush = QBrush(QColor(0,0,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    elif (item.x == self.redcoords.x and item.y == self.redcoords.y):
-                        #redraws the old red hex
-                        self.brush = QBrush(QColor(255,0,0,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    else:
-                        #draw the remainder white hex
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
+            for item in self.index:
+                if (self.mouse.x == self.redcoords.x and self.mouse.y == self.redcoords.y ):
+                    #undo red hex
+                    self.iteration=0
+                    self.brush = QBrush(QColor(255,255,255,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
+                elif (item.x == self.mouse.x and item.y == self.mouse.y):
+                    #draws blue hex
+                    self.bluecoords = Point(item.x,item.y)
+                    self.brush = QBrush(QColor(0,0,255,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
+                elif (item.x == self.redcoords.x and item.y == self.redcoords.y):
+                    #redraws the old red hex
+                    self.brush = QBrush(QColor(255,0,0,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
+                else:
+                    #draw the remainder white hex
+                    self.brush = QBrush(QColor(255,255,255,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
         elif self.iteration == 3:
-            if distance > self.radius: #not valid hex chosen
-                for item in self.index:
+            for item in self.index:
+                if (self.mouse.x == self.bluecoords.x and self.mouse.y == self.bluecoords.y ):
+                    #undo blue hex
+                    self.iteration=1
+                    self.brush = QBrush(QColor(255,255,255,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
                     if (item.x == self.redcoords.x and item.y == self.redcoords.y):
                         #redraws the old red hex
                         self.brush = QBrush(QColor(255,0,0,255))
                         painter.setBrush(self.brush)
                         polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
                         painter.drawPolygon(polygon)
-                    elif (item.x == self.bluecoords.x and item.y == self.bluecoords.y):
-                        #draws old blue hex
-                        self.bluecoords = Point(item.x,item.y)
-                        self.brush = QBrush(QColor(0,0,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    else:
-                        #draw the remainder white hex
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                    self.iteration=2
-            else:
-                for item in self.index:
-                    if (self.mouse.x == self.bluecoords.x and self.mouse.y == self.bluecoords.y ):
-                        #undo blue hex
-                        self.iteration=1
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
-                        if (item.x == self.redcoords.x and item.y == self.redcoords.y):
-                            #redraws the old red hex
-                            self.brush = QBrush(QColor(255,0,0,255))
-                            painter.setBrush(self.brush)
-                            polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                            painter.drawPolygon(polygon)
-                    else:
-                        self.brush = QBrush(QColor(255,255,255,255))
-                        painter.setBrush(self.brush)
-                        polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
-                        painter.drawPolygon(polygon)
+                else:
+                    self.brush = QBrush(QColor(255,255,255,255))
+                    painter.setBrush(self.brush)
+                    polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
+                    painter.drawPolygon(polygon)
 
 
 
