@@ -253,7 +253,6 @@ class window(QDialog):
             for item in self.index:
                 if (self.mouse.x == self.bluecoords.x and self.mouse.y == self.bluecoords.y ):
                     #undo blue hex
-                    self.iteration=1
                     self.brush = QBrush(QColor(255,255,255,255))
                     painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
@@ -264,7 +263,9 @@ class window(QDialog):
                         painter.setBrush(self.brush)
                         polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
                         painter.drawPolygon(polygon)
+                    self.iteration=1
                 else:
+                    #draw all white hexes
                     self.brush = QBrush(QColor(255,255,255,255))
                     painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
