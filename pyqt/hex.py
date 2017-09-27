@@ -34,9 +34,9 @@ def get_digit(x):
     return int(stringnum[-1])
 
 def pixel_to_hex(x,y,size):
-    q = round(-x * 2/3 / size)
-    r = round((x / 3 + math.sqrt(3)/3 * y) / size)
-    return Hex(q,r,size)
+    q = -x * 2/3 / size
+    r = (x / 3 + math.sqrt(3)/3 * y) / size
+    return hex_round(Hex(q,r,size))
 
 def hex_to_pixel(hex):
     x = hex.size*3/2*hex.q
@@ -79,6 +79,9 @@ def cube_round(cube):
         rz = -rx-ry
 
     return Cube(rx, ry, rz)
+
+def hex_round(hex):
+    return cube_to_axial(cube_round(axial_to_cube(hex)))
 
 def lerp(a, b, t):
     return a + (b - a) * t
