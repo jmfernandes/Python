@@ -106,7 +106,7 @@ class Hex:
                             self.q*self.height+(self.r*self.height*2))
 
     def __repr__(self):
-        return 'Hex(%r,%r,%r,%r)' % (self.q,self.r,self.size,self.center)
+        return 'Hex(%r,%r,%r)' % (self.q,self.r,self.size)
 
     def __add__(self,other):
         q = self.q + other.q
@@ -129,7 +129,13 @@ class Hex:
         y = -x-z
         return (abs(x) + abs(y) + abs(z)) / 2
 
-print(cube_linedraw(Hex(-3,3),Hex(3,-2)))
+# print(cube_linedraw(Hex(-3,3),Hex(3,-2)))
+
+
+###need to experiment with passing i and j to HEX as tuple instead
+###of item.x,item.y
+
+
 
 class window(QDialog):
 
@@ -233,6 +239,9 @@ class window(QDialog):
                 elif (item.x == self.mouse.x and item.y == self.mouse.y):
                     #draws blue hex
                     self.bluecoords = Point(item.x,item.y)
+                    print(cube_linedraw(Hex(round(self.bluecoords.x),round(self.bluecoords.y)),
+                                        Hex(round(self.redcoords.x),round(self.redcoords.y))))
+                    #print line above is list of all hexes in line
                     self.brush = QBrush(QColor(0,0,255,255))
                     painter.setBrush(self.brush)
                     polygon = self.createPoly(Hex(item.x,item.y,self.polygonsize))
