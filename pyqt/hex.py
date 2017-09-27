@@ -28,6 +28,11 @@ r = lambda: random.randint(0,255)
 s = lambda: '#%02X%02X%02X' % (r(),r(),r())
 # s() #creates a random hex code for colors
 
+def get_digit(x):
+    rounded = int(x*10)
+    stringnum = str(rounded)
+    return int(stringnum[-1])
+
 def pixel_to_hex(x,y,size):
     q = round(-x * 2/3 / size)
     r = round((x / 3 + math.sqrt(3)/3 * y) / size)
@@ -238,7 +243,7 @@ class window(QDialog):
             self.reset()
 
     def paintEvent(self, event):
-        print(self.iteration)
+        # print(self.iteration)
         painter  = QPainter(self)
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                # set lineWidth
