@@ -137,33 +137,23 @@ class Hex:
         y = -x-z
         return (abs(x) + abs(y) + abs(z)) / 2
 
-# print(cube_linedraw(Hex(-3,3),Hex(3,-2)))
-
-
-###need to experiment with passing i and j to HEX as tuple instead
-###of item.x,item.y
-
-
-
 class window(QDialog):
 
     def __init__(self):
         super(window,self).__init__()
         self.initUI()
-        self.firstLoad = False
 
     def initUI(self):
 
         self.iteration   = 0
-        self.mouse       = Point(0.99,0.99)
+        self.mouse       = Point(0.99,0.99) #initiate it with point that wont match any hex
         self.hover       = Point(0.99,0.99)
         self.redcoords   = Point(0.99,0.99)
         self.bluecoords  = Point(0.99,0.99)
         self.radius      = 2
         self.polygonsize = 50
-        self.drawline = False
-        self.drawred = False
-        self.firstLoad = True
+        self.drawline    = False
+        self.drawred     = False
         self.windowSize  = Hex(0,0,self.polygonsize).width*(2*self.radius+3.5)
         self.resize(self.windowSize,self.windowSize)
         self.setWindowTitle("PyQt - Hex Board")
@@ -207,23 +197,21 @@ class window(QDialog):
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseMove:
+            old = self.hover
             x   = self.windowSize/2 - event.x()
             y   = self.windowSize/2 - event.y()
             hoverCheck = Point(pixel_to_hex(x,y,self.polygonsize).q,
                                pixel_to_hex(x,y,self.polygonsize).r)
             distance = Hex(hoverCheck.x,hoverCheck.y).distance_from_center()
-            # print(distance,self.radius)
             if distance <= self.radius:
                 self.hover = Point(pixel_to_hex(x,y,self.polygonsize).q,
                                    pixel_to_hex(x,y,self.polygonsize).r)
-                if event.buttons() == Qt.NoButton: #executes if you move w/o push
-                    pos = event.pos()
-                    # print(distance)
-                    # print(self.hover)
-                    self.update()
-                else: #executes if you hold down button and move
-                    pos = event.pos()
-                    # print('outside')
+                new = self.hover
+                if(old != new):
+                    if event.buttons() == Qt.NoButton: #executes if you move w/o push
+                        self.update()
+                    else: #executes if you hold down button and move
+                        pass
         return QMainWindow.eventFilter(self, source, event)
 
     def mousePressEvent(self,QMouseEvent):
@@ -246,30 +234,21 @@ class window(QDialog):
             self.reset()
 
     def paintEvent(self, event):
-        # print(self.iteration)
         painter  = QPainter(self)
         self.pen = QPen(QColor(0,0,0))                      # set lineColor
         self.pen.setWidth(3)                                # set lineWidth
         painter.setPen(self.pen)
-        # print(self.iteration)
         if self.iteration == 0:
-            # print(self.hover.x,self.hover.y)
             for item in self.index:
                 #draw all blank hexes
                 self.colorHex(painter,item.x,item.y,255,255,255,255)
-                # print(self.firstLoad)
                 if (item.x == self.hover.x and item.y == self.hover.y):
                     self.colorHex(painter,item.x,item.y,255,0,0,100)
-
         elif self.iteration == 1:
-            # print(self.hover.x,self.hover.y)
             for item in self.index:
-                # print(self.redcoords.x,self.redcoords.y)
                 if (item.x == self.redcoords.x and item.y == self.redcoords.y and self.drawred == True):
                     #if already a redhex, redraw hex at red and color in old blue hex with white
                     self.colorHex(painter,item.x,item.y,255,0,0,255)
-                    # print(self.redcoords.x,self.redcoords.y)
-                    # self.colorHex(painter,self.redcoords.x,self.redcoords.y,255,0,0,255)
                 elif (item.x == self.mouse.x and item.y == self.mouse.y and self.drawred == False):
                     #draw red hex if this is the first
                     self.redcoords = Point(item.x,item.y)
@@ -284,7 +263,6 @@ class window(QDialog):
                     else:
                         self.colorHex(painter,item.x,item.y,0,0,255,100)
         elif self.iteration == 2:
-            # print(self.mouse.x,self.mouse.y)
             for item in self.index:
                 if (self.mouse.x == self.redcoords.x and self.mouse.y == self.redcoords.y ):
                     #undo red hex
