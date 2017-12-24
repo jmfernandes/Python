@@ -98,7 +98,7 @@ class MainApp(QWidget):
         self.title  = 'Finance'
         self.left   = 10
         self.top    = 10
-        self.width  = 320
+        self.width  = 520
         self.height = 400
 
         self.initUI()
@@ -110,20 +110,49 @@ class MainApp(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.IncomeTitle    = QLabel('Income')
-        self.MonthlyTitle    = QLabel('Monthly Budget')
+        self.MonthlyTitle   = QLabel('Monthly Budget')
         self.TaxableTitle   = QLabel('Taxable Income')
         self.FedTaxTitle    = QLabel('Federal Income Tax')
         self.StateTaxTitle  = QLabel('State Income Tax')
         self.SocialTaxTitle = QLabel('Social Security Tax')
         self.TotalTaxTitle  = QLabel('Total Tax')
+        self.ExpensesTitle  = QLabel('====Expenses====')
+        self.RentTitle          = QLabel('Rent')
+        self.UtilitiesTitle     = QLabel('Utilities')
+        self.GroceryTitle       = QLabel('Grocery')
+        self.DiningTitle        = QLabel('Dining')
+        self.FuelTitle          = QLabel('Fuel')
+        self.SubscriptionsTitle = QLabel('Subscriptions')
+        self.MedicalTitle       = QLabel('Medical')
+        self.CarTitle           = QLabel('Car')
+        self.HouseholdTitle     = QLabel('Household')
+        self.EntertainmentTitle = QLabel('Entertainment')
+        self.StudentTitle       = QLabel('Student Loans')
+        self.DonationsTitle     = QLabel('Donations')
+        self.SavingsTitle       = QLabel('Savings')
+        self.TotalTitle         = QLabel('Total Expenses')
 
-        self.IncomeEdit = QLineEdit()
-        self.MonthlyEdit = QLineEdit()
-        self.TaxableEdit = QLineEdit()
-        self.FedTaxEdit = QLineEdit()
-        self.StateTaxEdit = QLineEdit()
-        self.SocialTaxEdit = QLineEdit()
-        self.TotalTaxEdit = QLineEdit()
+        self.IncomeEdit         = QLineEdit()
+        self.MonthlyEdit        = QLineEdit()
+        self.TaxableEdit        = QLineEdit()
+        self.FedTaxEdit         = QLineEdit()
+        self.StateTaxEdit       = QLineEdit()
+        self.SocialTaxEdit      = QLineEdit()
+        self.TotalTaxEdit       = QLineEdit()
+        self.RentEdit           = QLineEdit()
+        self.UtilitiesEdit      = QLineEdit()
+        self.GroceryEdit        = QLineEdit()
+        self.DiningEdit         = QLineEdit()
+        self.FuelEdit           = QLineEdit()
+        self.SubscriptionsEdit  = QLineEdit()
+        self.MedicalEdit        = QLineEdit()
+        self.CarEdit            = QLineEdit()
+        self.HouseholdEdit      = QLineEdit()
+        self.EntertainmentEdit  = QLineEdit()
+        self.StudentEdit        = QLineEdit()
+        self.DonationsEdit      = QLineEdit()
+        self.SavingsEdit        = QLineEdit()
+        self.TotalEdit          = QLineEdit()
         self.TaxableEdit.setReadOnly(True)
         self.FedTaxEdit.setReadOnly(True)
         self.StateTaxEdit.setReadOnly(True)
@@ -140,20 +169,48 @@ class MainApp(QWidget):
         #set palette color
         self.palette = QPalette()
 
-        self.grid.addWidget(self.IncomeTitle,   0, 0)
-        self.grid.addWidget(self.IncomeEdit,    1, 0)
-        self.grid.addWidget(self.TaxableTitle,  2, 0)
-        self.grid.addWidget(self.TaxableEdit,   3, 0)
-        self.grid.addWidget(self.FedTaxTitle,   4, 0)
-        self.grid.addWidget(self.FedTaxEdit,    5, 0)
-        self.grid.addWidget(self.StateTaxTitle, 6, 0)
-        self.grid.addWidget(self.StateTaxEdit,  7, 0)
-        self.grid.addWidget(self.SocialTaxTitle,8, 0)
-        self.grid.addWidget(self.SocialTaxEdit, 9, 0)
-        self.grid.addWidget(self.TotalTaxTitle, 10, 0)
-        self.grid.addWidget(self.TotalTaxEdit,  11, 0)
-        self.grid.addWidget(self.MonthlyTitle,   12, 0)
-        self.grid.addWidget(self.MonthlyEdit,    13, 0)
+        self.grid.addWidget(self.IncomeTitle,       0, 0)
+        self.grid.addWidget(self.IncomeEdit,        1, 0)
+        self.grid.addWidget(self.TaxableTitle,      2, 0)
+        self.grid.addWidget(self.TaxableEdit,       3, 0)
+        self.grid.addWidget(self.FedTaxTitle,       4, 0)
+        self.grid.addWidget(self.FedTaxEdit,        5, 0)
+        self.grid.addWidget(self.StateTaxTitle,     6, 0)
+        self.grid.addWidget(self.StateTaxEdit,      7, 0)
+        self.grid.addWidget(self.SocialTaxTitle,    8, 0)
+        self.grid.addWidget(self.SocialTaxEdit,     9, 0)
+        self.grid.addWidget(self.TotalTaxTitle,     10, 0)
+        self.grid.addWidget(self.TotalTaxEdit,      11, 0)
+        self.grid.addWidget(self.MonthlyTitle,      12, 0)
+        self.grid.addWidget(self.MonthlyEdit,       13, 0)
+        self.grid.addWidget(self.ExpensesTitle,     14, 0)
+        self.grid.addWidget(self.RentTitle,         15, 0)
+        self.grid.addWidget(self.RentEdit,          15, 1)
+        self.grid.addWidget(self.UtilitiesTitle,    16, 0)
+        self.grid.addWidget(self.UtilitiesEdit,     16, 1)
+        self.grid.addWidget(self.GroceryTitle,      17, 0)
+        self.grid.addWidget(self.GroceryEdit,       17, 1)
+        self.grid.addWidget(self.DiningTitle,       18, 0)
+        self.grid.addWidget(self.DiningEdit,        18, 1)
+        self.grid.addWidget(self.FuelTitle,         19, 0)
+        self.grid.addWidget(self.FuelEdit,          19, 1)
+        self.grid.addWidget(self.SubscriptionsTitle,20, 0)
+        self.grid.addWidget(self.SubscriptionsEdit, 20, 1)
+        self.grid.addWidget(self.MedicalTitle,      21, 0)
+        self.grid.addWidget(self.MedicalEdit,       21, 1)
+        self.grid.addWidget(self.CarTitle,          22, 0)
+        self.grid.addWidget(self.CarEdit,           22, 1)
+        self.grid.addWidget(self.HouseholdTitle,    23, 0)
+        self.grid.addWidget(self.HouseholdEdit,     23, 1)
+        self.grid.addWidget(self.EntertainmentTitle,24, 0)
+        self.grid.addWidget(self.EntertainmentEdit, 24, 1)
+        self.grid.addWidget(self.StudentTitle,      25, 0)
+        self.grid.addWidget(self.StudentEdit,       25, 1)
+        self.grid.addWidget(self.DonationsTitle,    26, 0)
+        self.grid.addWidget(self.DonationsEdit,     26, 1)
+        self.grid.addWidget(self.TotalTitle,        15, 2)
+        self.grid.addWidget(self.TotalEdit,         15, 3)
+
 
 
         ##
@@ -174,9 +231,35 @@ class MainApp(QWidget):
         self.IncomeEdit.textEdited.connect(self.update)
         self.TotalTaxEdit.textChanged.connect(self.budget)
 
-        #zero out values
+        #set values
+        self.RentEdit.setText("1400.00")
+        self.UtilitiesEdit.setText("50.00")
+        self.GroceryEdit.setText("300.00")
+        self.DiningEdit.setText("200.00")
+        self.FuelEdit.setText("200.00")
+        self.SubscriptionsEdit.setText("30.00")
+        self.MedicalEdit.setText("0.00")
+        self.CarEdit.setText("0.00")
+        self.HouseholdEdit.setText("100.00")
+        self.EntertainmentEdit.setText("200.00")
+        self.StudentEdit.setText("1000.00")
+        self.DonationsEdit.setText("0.00")
 
+        total = float(self.RentEdit.text()) + \
+                float(self.UtilitiesEdit.text()) + \
+                float(self.GroceryEdit.text()) + \
+                float(self.DiningEdit.text()) + \
+                float(self.FuelEdit.text()) + \
+                float(self.SubscriptionsEdit.text()) + \
+                float(self.MedicalEdit.text()) + \
+                float(self.CarEdit.text()) + \
+                float(self.HouseholdEdit.text()) + \
+                float(self.EntertainmentEdit.text()) + \
+                float(self.StudentEdit.text()) + \
+                float(self.DonationsEdit.text())
+        self.TotalEdit.setText(str(total))
 
+        #
         self.setLayout(self.grid)
         self.show()
 
