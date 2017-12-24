@@ -23,6 +23,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import     (
                             QFont,
                             QIntValidator,
+                            QDoubleValidator,
                             QPalette,
                             QColor,
                             QPainter,
@@ -160,7 +161,9 @@ class MainApp(QWidget):
         # lcd = QLCDNumber(self)
 
         self.onlyInt = QIntValidator()
-        self.IncomeEdit.setValidator(self.onlyInt)
+        self.onlyFloat = QDoubleValidator()
+        self.IncomeEdit.setValidator(self.onlyFloat)
+        self.MonthlyEdit.setValidator(self.onlyFloat)
 
         self.grid = QGridLayout()
         self.paddingspace = 10
@@ -216,8 +219,8 @@ class MainApp(QWidget):
         ##
         r1 = QRadioButton("Single")
         r2 = QRadioButton("Married")
-        self.grid.addWidget(r1, 1, 1)
-        self.grid.addWidget(r2, 1, 2)
+        self.grid.addWidget(r1, 1, 2)
+        self.grid.addWidget(r2, 2, 2)
         r1.setChecked(True)
         self.bg = QButtonGroup(self)
         self.bg.addButton(r1,1)
@@ -227,9 +230,6 @@ class MainApp(QWidget):
         # bg.buttonClicked['QAbstractButton *'].connect(self.button_clicked)
         self.bg.buttonClicked.connect(self.update)
 
-        #connect to update function
-        self.IncomeEdit.textEdited.connect(self.update)
-        self.TotalTaxEdit.textChanged.connect(self.budget)
 
         #set values
         self.RentEdit.setText("1400.00")
@@ -259,25 +259,54 @@ class MainApp(QWidget):
                 float(self.DonationsEdit.text())
         self.TotalEdit.setText(str(total))
 
+        #connect to update function
+        self.IncomeEdit.textEdited.connect(self.update)
+        self.MonthlyEdit.textChanged.connect(self.budget)
+        self.RentEdit.textChanged.connect(self.budget)
+        self.UtilitiesEdit.textChanged.connect(self.budget)
+        self.GroceryEdit.textChanged.connect(self.budget)
+        self.DiningEdit.textChanged.connect(self.budget)
+        self.FuelEdit.textChanged.connect(self.budget)
+        self.SubscriptionsEdit.textChanged.connect(self.budget)
+        self.MedicalEdit.textChanged.connect(self.budget)
+        self.CarEdit.textChanged.connect(self.budget)
+        self.HouseholdEdit.textChanged.connect(self.budget)
+        self.EntertainmentEdit.textChanged.connect(self.budget)
+        self.StudentEdit.textChanged.connect(self.budget)
+        self.DonationsEdit.textChanged.connect(self.budget)
+
         #
         self.setLayout(self.grid)
         self.show()
 
     def budget(self):
         print('budget')
+        total = float(self.RentEdit.text()) + \
+                float(self.UtilitiesEdit.text()) + \
+                float(self.GroceryEdit.text()) + \
+                float(self.DiningEdit.text()) + \
+                float(self.FuelEdit.text()) + \
+                float(self.SubscriptionsEdit.text()) + \
+                float(self.MedicalEdit.text()) + \
+                float(self.CarEdit.text()) + \
+                float(self.HouseholdEdit.text()) + \
+                float(self.EntertainmentEdit.text()) + \
+                float(self.StudentEdit.text()) + \
+                float(self.DonationsEdit.text())
+        self.TotalEdit.setText(str(total))
 
     def update(self):
         # print(self.bg.checkedId())
         if(len(self.IncomeEdit.text()) != 0): #only run if there are values
-            number = int(self.IncomeEdit.text())
+            number = float(self.IncomeEdit.text())
             if (self.bg.checkedId() == 1):
                 standard_deduction = 6300
             else:
                 standard_deduction = 12000
             self.TaxableEdit.setText(str(max(0,number-standard_deduction)))
-            self.FedTaxEdit.setText(str(federal_tax(int(self.TaxableEdit.text()))))
-            self.StateTaxEdit.setText(str(state_tax(int(self.IncomeEdit.text()))))
-            self.SocialTaxEdit.setText(str("{0:.2f}".format(int(self.IncomeEdit.text())*0.0765)))
+            self.FedTaxEdit.setText(str(federal_tax(float(self.TaxableEdit.text()))))
+            self.StateTaxEdit.setText(str(state_tax(float(self.IncomeEdit.text()))))
+            self.SocialTaxEdit.setText(str("{0:.2f}".format(float(self.IncomeEdit.text())*0.0765)))
             self.TotalTaxEdit.setText(str("{0:.2f}".format(float(self.FedTaxEdit.text())+float(self.StateTaxEdit.text())+float(self.SocialTaxEdit.text()))))
             difference = float(self.IncomeEdit.text()) - float(self.TotalTaxEdit.text())
             divide_str = str("{0:.2f}".format(difference / 12.0))
