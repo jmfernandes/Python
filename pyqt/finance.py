@@ -91,6 +91,12 @@ def state_tax(income):
 
     return("{0:.2f}".format(outcome))
 
+def FloatOrZero(value):
+    try:
+        return float(value)
+    except:
+        return 0.0
+
 class MainApp(QWidget):
 
     def __init__(self):
@@ -245,18 +251,18 @@ class MainApp(QWidget):
         self.StudentEdit.setText("1000.00")
         self.DonationsEdit.setText("0.00")
 
-        total = float(self.RentEdit.text()) + \
-                float(self.UtilitiesEdit.text()) + \
-                float(self.GroceryEdit.text()) + \
-                float(self.DiningEdit.text()) + \
-                float(self.FuelEdit.text()) + \
-                float(self.SubscriptionsEdit.text()) + \
-                float(self.MedicalEdit.text()) + \
-                float(self.CarEdit.text()) + \
-                float(self.HouseholdEdit.text()) + \
-                float(self.EntertainmentEdit.text()) + \
-                float(self.StudentEdit.text()) + \
-                float(self.DonationsEdit.text())
+        total = FloatOrZero(self.RentEdit.text()) + \
+                FloatOrZero(self.UtilitiesEdit.text()) + \
+                FloatOrZero(self.GroceryEdit.text()) + \
+                FloatOrZero(self.DiningEdit.text()) + \
+                FloatOrZero(self.FuelEdit.text()) + \
+                FloatOrZero(self.SubscriptionsEdit.text()) + \
+                FloatOrZero(self.MedicalEdit.text()) + \
+                FloatOrZero(self.CarEdit.text()) + \
+                FloatOrZero(self.HouseholdEdit.text()) + \
+                FloatOrZero(self.EntertainmentEdit.text()) + \
+                FloatOrZero(self.StudentEdit.text()) + \
+                FloatOrZero(self.DonationsEdit.text())
         self.TotalEdit.setText(str(total))
 
         #connect to update function
@@ -281,34 +287,37 @@ class MainApp(QWidget):
 
     def budget(self):
         print('budget')
-        total = float(self.RentEdit.text()) + \
-                float(self.UtilitiesEdit.text()) + \
-                float(self.GroceryEdit.text()) + \
-                float(self.DiningEdit.text()) + \
-                float(self.FuelEdit.text()) + \
-                float(self.SubscriptionsEdit.text()) + \
-                float(self.MedicalEdit.text()) + \
-                float(self.CarEdit.text()) + \
-                float(self.HouseholdEdit.text()) + \
-                float(self.EntertainmentEdit.text()) + \
-                float(self.StudentEdit.text()) + \
-                float(self.DonationsEdit.text())
+        # print(self.RentEdit.text())
+        # if not self.RentEdit.text():
+        #     print('not')
+        total = FloatOrZero(self.RentEdit.text()) + \
+                FloatOrZero(self.UtilitiesEdit.text()) + \
+                FloatOrZero(self.GroceryEdit.text()) + \
+                FloatOrZero(self.DiningEdit.text()) + \
+                FloatOrZero(self.FuelEdit.text()) + \
+                FloatOrZero(self.SubscriptionsEdit.text()) + \
+                FloatOrZero(self.MedicalEdit.text()) + \
+                FloatOrZero(self.CarEdit.text()) + \
+                FloatOrZero(self.HouseholdEdit.text()) + \
+                FloatOrZero(self.EntertainmentEdit.text()) + \
+                FloatOrZero(self.StudentEdit.text()) + \
+                FloatOrZero(self.DonationsEdit.text())
         self.TotalEdit.setText(str(total))
 
     def update(self):
         # print(self.bg.checkedId())
         if(len(self.IncomeEdit.text()) != 0): #only run if there are values
-            number = float(self.IncomeEdit.text())
+            number = FloatOrZero(self.IncomeEdit.text())
             if (self.bg.checkedId() == 1):
                 standard_deduction = 6300
             else:
                 standard_deduction = 12000
             self.TaxableEdit.setText(str(max(0,number-standard_deduction)))
-            self.FedTaxEdit.setText(str(federal_tax(float(self.TaxableEdit.text()))))
-            self.StateTaxEdit.setText(str(state_tax(float(self.IncomeEdit.text()))))
-            self.SocialTaxEdit.setText(str("{0:.2f}".format(float(self.IncomeEdit.text())*0.0765)))
-            self.TotalTaxEdit.setText(str("{0:.2f}".format(float(self.FedTaxEdit.text())+float(self.StateTaxEdit.text())+float(self.SocialTaxEdit.text()))))
-            difference = float(self.IncomeEdit.text()) - float(self.TotalTaxEdit.text())
+            self.FedTaxEdit.setText(str(federal_tax(FloatOrZero(self.TaxableEdit.text()))))
+            self.StateTaxEdit.setText(str(state_tax(FloatOrZero(self.IncomeEdit.text()))))
+            self.SocialTaxEdit.setText(str("{0:.2f}".format(FloatOrZero(self.IncomeEdit.text())*0.0765)))
+            self.TotalTaxEdit.setText(str("{0:.2f}".format(FloatOrZero(self.FedTaxEdit.text())+FloatOrZero(self.StateTaxEdit.text())+float(self.SocialTaxEdit.text()))))
+            difference = FloatOrZero(self.IncomeEdit.text()) - FloatOrZero(self.TotalTaxEdit.text())
             divide_str = str("{0:.2f}".format(difference / 12.0))
             self.MonthlyEdit.setText(divide_str)
             if (difference/12.0 < 3000):
