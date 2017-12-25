@@ -106,7 +106,7 @@ class MainApp(QWidget):
         self.left   = 10
         self.top    = 10
         self.width  = 520
-        self.height = 400
+        self.height = 800
 
         self.initUI()
 
@@ -115,6 +115,7 @@ class MainApp(QWidget):
 
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setFixedSize(self.width, self.height)
 
         self.IncomeTitle    = QLabel('Income')
         self.MonthlyTitle   = QLabel('Monthly Budget')
@@ -138,6 +139,7 @@ class MainApp(QWidget):
         self.DonationsTitle     = QLabel('Donations')
         self.SavingsTitle       = QLabel('Savings')
         self.TotalTitle         = QLabel('Total Expenses')
+        self.PercentageTitle    = QLabel('Total Percent')
 
         self.IncomeEdit         = QLineEdit()
         self.MonthlyEdit        = QLineEdit()
@@ -160,16 +162,32 @@ class MainApp(QWidget):
         self.DonationsEdit      = QLineEdit()
         self.SavingsEdit        = QLineEdit()
         self.TotalEdit          = QLineEdit()
+        self.PercentageEdit     = QLineEdit()
         self.TaxableEdit.setReadOnly(True)
         self.FedTaxEdit.setReadOnly(True)
         self.StateTaxEdit.setReadOnly(True)
+        self.TotalTaxEdit.setReadOnly(True)
         self.SocialTaxEdit.setReadOnly(True)
+        self.TotalEdit.setReadOnly(True)
+        self.PercentageEdit.setReadOnly(True)
         # lcd = QLCDNumber(self)
 
         self.onlyInt = QIntValidator()
         self.onlyFloat = QDoubleValidator()
         self.IncomeEdit.setValidator(self.onlyFloat)
         self.MonthlyEdit.setValidator(self.onlyFloat)
+        self.RentEdit.setValidator(self.onlyFloat)
+        self.UtilitiesEdit.setValidator(self.onlyFloat)
+        self.GroceryEdit.setValidator(self.onlyFloat)
+        self.DiningEdit.setValidator(self.onlyFloat)
+        self.FuelEdit.setValidator(self.onlyFloat)
+        self.SubscriptionsEdit.setValidator(self.onlyFloat)
+        self.MedicalEdit.setValidator(self.onlyFloat)
+        self.CarEdit.setValidator(self.onlyFloat)
+        self.HouseholdEdit.setValidator(self.onlyFloat)
+        self.EntertainmentEdit.setValidator(self.onlyFloat)
+        self.StudentEdit.setValidator(self.onlyFloat)
+        self.DonationsEdit.setValidator(self.onlyFloat)
 
         self.grid = QGridLayout()
         self.paddingspace = 10
@@ -219,6 +237,8 @@ class MainApp(QWidget):
         self.grid.addWidget(self.DonationsEdit,     26, 1)
         self.grid.addWidget(self.TotalTitle,        15, 2)
         self.grid.addWidget(self.TotalEdit,         15, 3)
+        self.grid.addWidget(self.PercentageTitle,   16, 2)
+        self.grid.addWidget(self.PercentageEdit,    16, 3)
 
 
 
@@ -234,7 +254,10 @@ class MainApp(QWidget):
 
         # bg.buttonToggled.connect(self.on_radio_button_toggled)
         # bg.buttonClicked['QAbstractButton *'].connect(self.button_clicked)
-        self.bg.buttonClicked.connect(self.update)
+
+        ##
+        self.MonthlyEdit.setStyleSheet("QLineEdit { background-color : grey; color : black; }")
+        self.TotalEdit.setStyleSheet("QLineEdit { background-color : grey; color : black; }")
 
 
         #set values
@@ -266,6 +289,7 @@ class MainApp(QWidget):
         self.TotalEdit.setText(str(total))
 
         #connect to update function
+        self.bg.buttonClicked.connect(self.update)
         self.IncomeEdit.textEdited.connect(self.update)
         self.MonthlyEdit.textChanged.connect(self.budget)
         self.RentEdit.textChanged.connect(self.budget)
@@ -286,7 +310,7 @@ class MainApp(QWidget):
         self.show()
 
     def budget(self):
-        print('budget')
+        # print('budget')
         # print(self.RentEdit.text())
         # if not self.RentEdit.text():
         #     print('not')
@@ -302,7 +326,19 @@ class MainApp(QWidget):
                 FloatOrZero(self.EntertainmentEdit.text()) + \
                 FloatOrZero(self.StudentEdit.text()) + \
                 FloatOrZero(self.DonationsEdit.text())
-        self.TotalEdit.setText(str(total))
+        self.TotalEdit.setText(str("{0:.2f}".format(total)))
+
+        percentage = 0
+        if FloatOrZero(self.MonthlyEdit.text()) != 0:
+            percentage = (FloatOrZero(self.TotalEdit.text())/FloatOrZero(self.MonthlyEdit.text()))*100
+            self.PercentageEdit.setText(str("{0:.2f}".format(percentage))+'%')
+        else:
+            self.PercentageEdit.setText("0.00%")
+
+        if (percentage > 100):
+            self.PercentageEdit.setStyleSheet("QLineEdit { background-color : red; color : black; }")
+        else:
+            self.PercentageEdit.setStyleSheet("QLineEdit { background-color : green; color : black; }")
 
     def update(self):
         # print(self.bg.checkedId())
@@ -320,14 +356,14 @@ class MainApp(QWidget):
             difference = FloatOrZero(self.IncomeEdit.text()) - FloatOrZero(self.TotalTaxEdit.text())
             divide_str = str("{0:.2f}".format(difference / 12.0))
             self.MonthlyEdit.setText(divide_str)
-            if (difference/12.0 < 3000):
-                # self.palette.setColor(self.backgroundRole(), QColor('red'))
-                # self.MonthlyEdit.setPalette(self.palette)
-                self.MonthlyEdit.setStyleSheet("QLineEdit { background-color : red; color : black; }")
-            else:
-                # self.palette.setColor(self.backgroundRole(), QColor('blue'))
-                # self.MonthlyEdit.setPalette(self.palette)
-                self.MonthlyEdit.setStyleSheet("QLineEdit { background-color : green; color : black; }")
+            # if (difference/12.0 < 3000):
+            #     # self.palette.setColor(self.backgroundRole(), QColor('red'))
+            #     # self.MonthlyEdit.setPalette(self.palette)
+            #     self.MonthlyEdit.setStyleSheet("QLineEdit { background-color : red; color : black; }")
+            # else:
+            #     # self.palette.setColor(self.backgroundRole(), QColor('blue'))
+            #     # self.MonthlyEdit.setPalette(self.palette)
+            #     self.MonthlyEdit.setStyleSheet("QLineEdit { background-color : green; color : black; }")
 
 
     # def paintEvent(self, e):
