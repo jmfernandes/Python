@@ -150,7 +150,7 @@ class window(QDialog):
         self.hover       = Point(0.99,0.99)
         self.redcoords   = Point(0.99,0.99)
         self.bluecoords  = Point(0.99,0.99)
-        self.radius      = 2
+        self.radius      = 5
         self.polygonsize = 50
         self.drawline    = False
         self.drawred     = False
