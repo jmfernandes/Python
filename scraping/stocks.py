@@ -13,7 +13,6 @@
 #
 #
 ########################################
-from collections import OrderedDict
 
 holdings = {
             'BOTZ': {'shares' : 2, 'sector' : 'technology'},
