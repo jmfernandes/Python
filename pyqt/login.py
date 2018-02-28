@@ -342,7 +342,7 @@ class TableData(QTableWidget):
                 self.setItem(i,j, QTableWidgetItem(holdings[name][value]))
                 if (value == 'percent_change' or value == 'equity_change') and float(holdings[name][value]) < 0 :
                     self.item(i, j).setBackground(QColor(255,0,0,150))
-                elif (value == 'percent_change' or value == 'equity_change') and float(holdings[name]['percent_change']) < 2 :
+                elif (value == 'percent_change' or value == 'equity_change') and float(holdings[name]['percent_change']) < 5 :
                     self.item(i, j).setBackground(QColor(255,255,0,150))
                 elif (value == 'percent_change' or value == 'equity_change'):
                     self.item(i, j).setBackground(QColor(0,255,0,150))
